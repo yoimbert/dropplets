@@ -25,7 +25,7 @@ if (empty($_GET['filename'])) {
 } else if($_GET['filename'] == 'rss' || $_GET['filename'] == 'atom') {
     $filename = $_GET['filename'];
 }  else {
-    
+
     //Filename can be /some/blog/post-filename.md We should get the last part only
     $filename = explode('/',$_GET['filename']);
 
@@ -34,7 +34,7 @@ if (empty($_GET['filename'])) {
         $category = $filename[count($filename) - 1];
         $filename = null;
     } else {
-      
+
         // Individual Post
         $filename = POSTS_DIR . $filename[count($filename) - 1] . FILE_EXT;
     }
@@ -95,7 +95,7 @@ if ($filename==NULL) {
 
             // Get the post category.
             $post_category = $post['post_category'];
-            
+
             // Get the post category link.
             $post_category_link = $blog_url.'category/'.urlencode(trim(strtolower($post_category)));
 
@@ -324,10 +324,10 @@ else {
 
         // Get the post category.
         $post_category = str_replace(array("\n", '-'), '', $fcontents[4]);
-        
+
         // Get the post status.
         $post_status = str_replace(array("\n", '- '), '', $fcontents[5]);
-        
+
         // Get the post category link.
         $post_category_link = $blog_url.'category/'.urlencode(trim(strtolower($post_category)));
 
@@ -343,7 +343,7 @@ else {
 
         // free memory
         unset($file_array);
-                
+
         // Get the site title.
         $page_title = trim(str_replace('# ', '', $fcontents[0]));
 
@@ -405,21 +405,21 @@ else {
     $port = $_SERVER["SERVER_PORT"];
     $path = $_SERVER["REQUEST_URI"];
 
-    // Check if running on alternate port.
-    if ($protocol === "https://") {
-        if ($port == 443)
-            $url = $protocol . $domain;
-        else
-            $url = $protocol . $domain . ":" . $port;
-    } elseif ($protocol === "http://") {
-        if ($port == 80)
-            $url = $protocol . $domain;
-        else
-            $url = $protocol . $domain . ":" . $port;
+    $path_last_element = end(explode("/", $path));
+    $file_name = end(explode("/", __FILE__));
+    if ($path_last_element === $file_name) {
+      /* If the last part of the URI is the same as the
+      * last part of the __FILE__ (the file's name).
+      * Remove it from the end.
+      *
+      * Using substr() since str_replace() could remove more than
+      * we would like.
+      */
+      $path = substr ($path, 0, -strlen($path_last_element));
     }
 
     $url .= $path;
-    
+
     // Check if the install directory is writable.
     $is_writable = (TRUE == is_writable(dirname(__FILE__) . '/'));
     ?>
@@ -438,10 +438,10 @@ else {
         <body class="dp-install">
             <form method="POST" action="./dropplets/save.php">
                 <a class="dp-icon-dropplets" href="http://dropplets.com" target="_blank"></a>
-                
+
                 <h2>Install Dropplets</h2>
                 <p>Welcome to an easier way to blog.</p>
-                
+
                 <input type="password" name="password" id="password" required placeholder="Choose Your Password">
                 <input type="password" name="password-confirmation" id="password-confirmation" required placeholder="Confirm Your Password" onblur="confirmPass()">
 
@@ -456,7 +456,7 @@ else {
 
     		    <button type="submit" name="submit" value="submit">k</button>
     		</form>
-                
+
             <?php if (!$is_writable) { ?>
                 <p style="color:red;">It seems that your config folder is not writable, please add the necessary permissions.</p>
             <?php } ?>
@@ -472,7 +472,7 @@ else {
             </script>
         </body>
     </html>
-<?php 
+<?php
 
 /*-----------------------------------------------------------------------------------*/
 /* That's All There is to It
